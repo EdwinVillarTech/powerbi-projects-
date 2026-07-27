@@ -1,60 +1,33 @@
-# Dashboard de Ventas — Nivel Básico (Power BI)
+Dashboard de Ventas — Tienda de Ropa
 
-**Autor:** Edwin Alberto Villar Díaz
-**Nivel:** Básico — Roadmap Power BI
-**Herramientas:** Power BI Desktop, Excel
+Autor: Edwin Alberto Villar Díaz
 
----
+1. El problema
 
-## 1. El problema
+Una tienda de ropa con 4 sucursales (Agora Mall, Blue Mall, Sambil, Megacentro) necesita saber cómo van sus ventas del semestre, qué categorías funcionan mejor, qué sucursal concentra más ventas, y si se está cumpliendo la meta.
 
-La gerencia de una empresa con presencia en 3 sucursales (Norte, Sur, Este) necesita
-un reporte simple que muestre el total de ventas, el desempeño por sucursal, y qué
-categorías de producto están funcionando mejor o peor, para decidir dónde enfocar
-esfuerzos comerciales.
+2. Un error que detecté y corregí (ETL)
 
-## 2. Lo que encontré en los datos
+El archivo de origen tenía los precios en 2 formatos distintos mezclados en la misma columna: unos con símbolo $ y coma de miles ($2,855.24) y otros con coma como separador decimal (1652,57). Un solo "Reemplazar valores" no servía para los dos casos a la vez, así que usé una columna condicional en Power Query que revisa si el texto tiene punto: si lo tiene, quita las comas; si no, cambia la coma por punto. También tuve que agregar una validación para que la fórmula no fallara con los valores vacíos (null).
 
-- El total general de ventas ronda los **26 mil** en el período analizado.
-- La categoría **Electrónicos** lidera claramente las ventas por encima de las demás.
-- La categoría **Cables** es la de menor facturación de todo el catálogo.
-- Al comparar sucursales, el desempeño no es uniforme — hay diferencias visibles
-  entre Norte, Sur y Este que vale la pena seguir investigando en el siguiente nivel
-  (cuando se agregue comparación año contra año).
+3. Lo que encontré
+Ventas totales: 1,542,260
+Categoría líder: Vestidos, con 137,048 en ventas
+Categoría más baja: Camisetas, con 38,575
+Sucursal líder: Blue Mall, con el 43.49% de las ventas totales — casi iguala ella sola a las otras 3 sucursales combinadas (56.51%)
+Meta semestral: cumplida en un 74.5% (1.49 millones de 2 millones)
+4. Cómo lo resolví
+Conecté el CSV a Power BI y limpié los datos (duplicados, precios, valores vacíos) en Power Query.
+Construí varios tipos de visual para practicar cuándo usar cada uno:
+Gráfico de líneas con jerarquía de fechas para ver la tendencia
+Treemap para comparar categorías por tamaño
+Dona para ver la proporción de ventas entre sucursales
+Medidor para ver el avance contra la meta semestral
+Matriz para poder revisar el detalle de ventas por vendedor y producto
+5. Mi conclusión
 
-## 3. Cómo lo resolví
+Blue Mall concentra una parte muy alta de las ventas totales, lo cual es una señal de dependencia riesgosa hacia una sola sucursal. Valdría la pena investigar qué está funcionando ahí (ubicación, personal, tráfico) para replicarlo en las demás. Respecto a la meta, con un 74.5% de avance, es probable cerrar cerca del objetivo si el ritmo se mantiene, aunque conviene reforzar el resto del período.
 
-- Conecté los datos de ventas desde Excel a Power BI Desktop.
-- Construí 3 vistas separadas para no saturar un solo dashboard:
-  - **Resumen General**: Tarjeta de Total de Ventas + Slicer interactivo por Vendedor.
-  - **Ventas por sucursal**: comparación de montos entre Norte, Sur y Este.
-  - **Ventas por categoria**: gráfico de barras para identificar qué productos
-    mueven más dinero.
-- Agregué un Slicer de Vendedor para que el reporte sea explorable sin tocar nada
-  más que un click — cualquier persona no técnica puede filtrar por vendedor.
-
-## 4. Mi opinión / conclusión analítica
-
-Cables tiene la venta más baja, pero antes de asumir que es un problema de demanda,
-hay que preguntarse **si se está midiendo bien el éxito de esa categoría**. Un cable
-cuesta una fracción de lo que cuesta una laptop o un monitor, así que aunque se
-vendan varias unidades, nunca va a competir en monto total contra Electrónicos.
-
-Mi recomendación no es lanzar una promoción aislada de cables, sino implementar
-**venta cruzada (cross-selling)**: ofrecer el cable, el mouse o el cargador en el
-mismo momento en que el cliente compra la laptop o el monitor. El cliente ya está
-en modo de compra y el costo adicional es bajo, lo que facilita mucho más la venta
-que esperar a que alguien entre buscando solo un cable.
-
-## 5. Qué aprendí / qué haría distinto
-
-- Aprendí que un número bajo en un gráfico no siempre significa "poco interés" —
-  puede significar que la categoría se mide de forma incompleta (monto vs unidades).
-- La próxima vez, agregaría desde el inicio una tarjeta de **Cantidad vendida**
-  junto a la de monto, para poder distinguir entre "se vende poco" y "se vende
-  barato" sin tener que volver atrás a revisarlo.
-- Para el siguiente nivel (Intermedio), quiero relacionar esta tabla de Ventas con
-  una tabla de Productos y una de Sucursales, en vez de trabajar con una sola tabla
-  plana, para practicar el modelo relacional real de Power BI.
-
----
+6. Qué aprendí
+Una misma columna puede tener más de un formato de dato sucio mezclado (no solo un problema, sino dos o más superpuestos), y hay que revisar caso por caso antes de aplicar una limpieza masiva.
+Aprendí a elegir el tipo de gráfico según la pregunta de negocio: tendencia en el tiempo, proporción entre partes, comparación de tamaños, o avance contra una meta — cada uno responde algo distinto.
